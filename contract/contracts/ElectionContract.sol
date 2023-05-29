@@ -120,8 +120,6 @@ contract ElectionContract {
     }
 
     //voter registration
-    event VoterEvent(bytes32 hash);
-
     function registerVoter(
         uint256 _electionId,
         string memory _name,
