@@ -1,4 +1,4 @@
-import { AppBar, Box, CssBaseline, IconButton, Toolbar, useMediaQuery } from '@mui/material';
+import { AppBar, Box, CssBaseline, IconButton, Typography, Toolbar, useMediaQuery } from '@mui/material';
 import React, { useContext, useEffect } from 'react'
 import theme from '../styles/theme';
 import MenuIcon from '@mui/icons-material/Menu'
@@ -37,8 +37,8 @@ const ResponsiveDrawer = (props: PropsType) => {
     }
 
 
-    return (<Box sx={{ display: 'flex' }}>
-        {/* <CssBaseline />
+    return (<Box sx={{ display: 'flex' }}>\
+        <CssBaseline />
         <AppBar
             position="fixed"
             sx={{
@@ -50,8 +50,8 @@ const ResponsiveDrawer = (props: PropsType) => {
                 ml: { sm: `${drawerWidth}px` },
             }}
         >
+            <Toolbar>
 
-            <Toolbar >
                 <IconButton
                     color="inherit"
                     aria-label="open drawer"
@@ -60,10 +60,10 @@ const ResponsiveDrawer = (props: PropsType) => {
                     sx={{ mr: 2, display: { sm: 'none' } }}
                 >
                     <MenuIcon />
-                </IconButton> */}
-        {/* <AppBarItem /> */}
-        {/* </Toolbar>
-        </AppBar> */}
+                </IconButton>
+            </Toolbar>
+            <Typography variant='h3' sx={{ pb: 3, color: 'orange', fontWeight: 'bold', textAlign: 'center' }}>Decentralized Voting System</Typography>
+        </AppBar>
         <Box
             component="nav"
             sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -87,7 +87,6 @@ const ResponsiveDrawer = (props: PropsType) => {
                 <SideBarItems />
             </StyledCustomDrawer>
         </Box>
-
         <Box
             component="main"
             sx={{ flexGrow: 1, p: 10, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
