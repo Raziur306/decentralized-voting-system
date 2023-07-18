@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box, Grid, TextField, Button, Typography, List, ListItem, ListItemText } from '@mui/material'
 import { VoteCounterCard } from '../components'
 import { StyledList, StyledTextField, StyledListItem, StyledTitleTypography, StyledVotingBox, StyledVerifyBtn } from '../styles/stylesVotes'
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 const Votes = () => {
 
     const [inputHash, setInputHash] = useState('');
@@ -18,7 +19,7 @@ const Votes = () => {
     }
 
 
-    
+
     return (
         <Box sx={{ mt: 3 }}>
             <Grid container justifyContent={'center'} >
@@ -30,17 +31,23 @@ const Votes = () => {
                             <StyledVerifyBtn onClick={handleOnVerifyBtnClick}>Verify</StyledVerifyBtn>
                         </Box>
                         <StyledList>
+                            <ListItem>
+                                <Box sx={{ color: 'red', display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}>
+                                    <WarningAmberRoundedIcon sx={{ fontSize: 50 }} />
+                                    <Typography fontWeight={'bold'} variant='h5'>Be careful.</Typography>
+                                </Box>
+                            </ListItem>
                             <StyledListItem>
-                                <ListItemText>Please be careful before giving vote.</ListItemText>
+                                <ListItemText>Exercise caution and careful deliberation before casting your vote.</ListItemText>
                             </StyledListItem>
                             <StyledListItem>
                                 <ListItemText>Choose candidate to vote.</ListItemText>
                             </StyledListItem>
                             <StyledListItem>
-                                <ListItemText>After confirmation you can&apos;t modify.</ListItemText>
+                                <ListItemText>Once you confirm your selection, it cannot be modified.</ListItemText>
                             </StyledListItem>
                             <StyledListItem>
-                                <ListItemText>Result will be found here after voting time was over.</ListItemText>
+                                <ListItemText>The final results will be available after the voting period ends.</ListItemText>
                             </StyledListItem>
                         </StyledList>
                     </StyledVotingBox>
