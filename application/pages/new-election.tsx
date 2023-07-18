@@ -5,7 +5,10 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 
 function NewElection() {
     return (
-        <Grid sx={{ justifyContent: 'space-around' }} container>
+        <Grid sx={{ justifyContent: 'space-around', paddingTop: 8 }} container>
+            <Grid item md={12}>
+                <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: 'white', paddingBottom: 10 }} variant='h5'> Initialize Ballot</Typography>
+            </Grid>
             <Grid item mx={6}>
                 <StyledList>
                     <StyledListItem sx={{ listStyle: 'none' }}><WarningAmberRoundedIcon sx={{ fontSize: 70, color: 'red' }} /><Typography variant='h4' sx={{ fontWeight: 'bold', color: 'red' }}>Be careful</Typography></StyledListItem>
@@ -20,7 +23,6 @@ function NewElection() {
                 </StyledList>
             </Grid>
             <Grid item mx={6}>
-                <Typography>Initialize Ballot</Typography>
                 <StyledChildBox>
                     <StyledTypography>Election Name:</StyledTypography>
                     <StyledTextField placeholder='Enter Election name' type='text' />

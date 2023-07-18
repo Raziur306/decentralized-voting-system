@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, Button, ListItem, TextField, Typography, List } from "@mui/material";
+import { Select, Box, Button, ListItem, TextField, Typography, List, MenuItem } from "@mui/material";
 
 export const StyledTextField = styled(TextField)({
     width: 500,
@@ -17,11 +17,7 @@ export const StyledTextField = styled(TextField)({
         '&:hover fieldset': {
             borderColor: 'gray',
         },
-
     },
-    '::-webkit-calendar-picker-indicator': {
-        filter: 'invert(1)'
-    }
 
 });
 
@@ -57,3 +53,33 @@ export const StyledList = styled(List)({
     color: "white",
     fontsize: 10,
 });
+
+
+//voters registration style
+export const StyledSelect = styled(Select)({
+    width: 500,
+    color: 'white',
+    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'green!important'
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'white'
+    },
+    '& .MuiSvgIcon-root': {
+        color: 'white'
+    },
+    '&:hover': {
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'white'
+        },
+    },
+    "::-moz-selection": {
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'white'
+        },
+    }
+});
+
+export const StyledMenuItem = styled(MenuItem)({
+    color: 'white'
+})
