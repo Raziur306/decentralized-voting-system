@@ -5,6 +5,12 @@ import { StyledList, StyledTextField, StyledListItem, StyledMenuItem } from '../
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { StyledSelect, StyledChildBox, StyledSubmitBtn, StyledTypography } from '../styles/newElectionStyle';
 function RegisterVoters() {
+    
+
+
+
+
+
     return <Grid sx={{ justifyContent: 'space-around', paddingTop: 8 }} container>
         <Grid item md={12}>
             <Typography sx={{ textAlign: 'center', fontWeight: 'bold', color: 'white', paddingBottom: 10 }} variant='h5'> Register Voter</Typography>
@@ -39,6 +45,10 @@ function RegisterVoters() {
             <StyledChildBox>
                 <StyledTypography>Enter Voter NID</StyledTypography>
                 <StyledTextField type='number' placeholder='NID number' />
+            </StyledChildBox>
+            <StyledChildBox>
+                <StyledTypography>Enter Voter Email</StyledTypography>
+                <StyledTextField type='email' placeholder='example@email.com' />
             </StyledChildBox>
             <StyledSubmitBtn sx={{ bgcolor: 'green!important' }}>Register Voter</StyledSubmitBtn>
         </Grid>
