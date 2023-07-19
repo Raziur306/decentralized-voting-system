@@ -1,15 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { Backdrop, Select, Grid, CircularProgress, Button, Typography, List, ListItem, ListItemText } from '@mui/material'
+import { Backdrop, Select, Grid, CircularProgress, Button, Typography, List, ListItem, ListItemText, Slide } from '@mui/material'
 import { VoteCounterCard } from '../components'
-import { StyledList, StyledTextField, StyledListItem, StyledMenuItem } from '../styles/newElectionStyle'
+import { StyledList, StyledTextField, StyledListItem, StyledMenuItem, StyledSuccessBox } from '../styles/newElectionStyle'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { StyledSelect, StyledChildBox, StyledSubmitBtn, StyledTypography } from '../styles/newElectionStyle';
 import { AuthorityContext } from '../context/AuthorityContext';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const RegisterVoters = () => {
-    const { electionList, isVoterRegistered, registerVoterCall, isVoterRegistrationLoading } = useContext(AuthorityContext)
+    const { setIsVoterEmailSent, isVoterEmailSent, electionList, isVoterRegistered, registerVoterCall, isVoterRegistrationLoading } = useContext(AuthorityContext)
     const [voterDetails, setVoterDetails] = useState({
-        electionID: null,
+        electionID: "",
         name: '',
         nid: null,
         email: ''
@@ -26,6 +27,10 @@ const RegisterVoters = () => {
     const handleOnSubmit = (e) => {
         registerVoterCall(voterDetails);
     }
+    const handleNotificationCancel = () => {
+        setIsVoterEmailSent(false);
+    }
+
 
     return (
         <>
@@ -48,25 +53,35 @@ const RegisterVoters = () => {
                 </Grid>
                 <Grid item mx={6}>
                     <StyledChildBox>
-                        <StyledTypography>Please select one election</StyledTypography>
+                        <StyledTypography>Please select an election</StyledTypography>
                         <StyledSelect
+                            onChange={handleOnChange}
+                            value={voterDetails.electionID}
                             displayEmpty
                         >
-                            <StyledMenuItem disabled><em>Please Select one Election</em></StyledMenuItem>
+                            <StyledMenuItem value={""} disabled><em>Please Select</em></StyledMenuItem>
+                            {
+                                electionList?.map((data, index) => {
+                                    const { name: electionName, hash } = data
+                                    return <StyledMenuItem name='electionID' value={hash} key={index}>{electionName}</StyledMenuItem>
+                                })
+                            }
                         </StyledSelect>
                     </StyledChildBox>
 
                     <StyledChildBox>
                         <StyledTypography>Voter&apos;s Name</StyledTypography>
-                        <StyledTextField onChange={handleOnChange} name='name' placeholder='Enter Election name' type='text' />
+                        <StyledTextField autoComplete='off
+                        ' onChange={handleOnChange} name='name' placeholder='Enter Election name' type='text' />
                     </StyledChildBox>
                     <StyledChildBox>
                         <StyledTypography>Enter Voter NID</StyledTypography>
-                        <StyledTextField onChange={handleOnChange} name='nid' type='number' placeholder='NID number' />
+                        <StyledTextField autoComplete='off' onChange={handleOnChange} name='nid' type='number' placeholder='NID number' />
                     </StyledChildBox>
                     <StyledChildBox>
                         <StyledTypography>Enter Voter Email</StyledTypography>
-                        <StyledTextField name='email' onChange={handleOnChange} type='email' placeholder='example@email.com' />
+                        <StyledTextField autoComplete='off
+                        ' name='email' onChange={handleOnChange} type='email' placeholder='example@email.com' />
                     </StyledChildBox>
                     <StyledSubmitBtn onClick={handleOnSubmit} sx={{ bgcolor: 'green!important' }}>Register Voter</StyledSubmitBtn>
                 </Grid>
@@ -75,6 +90,12 @@ const RegisterVoters = () => {
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isVoterRegistrationLoading}>
                 <CircularProgress sx={{ color: "gray" }} />
             </Backdrop>
+            <Slide direction="up" in={isVoterEmailSent} mountOnEnter unmountOnExit>
+                <StyledSuccessBox>
+                    <Typography color={'white'}>Successful</Typography>
+                    <CancelIcon onClick={handleNotificationCancel} sx={{ cursor: 'pointer' }} />
+                </StyledSuccessBox>
+            </Slide>
         </>)
 }
 

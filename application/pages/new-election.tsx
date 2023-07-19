@@ -7,7 +7,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 
 function NewElection() {
-    const { isBallotInitialized, isBallotLoading, initializeBallot, } = useContext(AuthorityContext)
+    const { isBallotInitialized, isBallotLoading, initializeBallot } = useContext(AuthorityContext)
     const [backDropState, setBackDRopState] = useState(false);
     const [electionState, steElectionState] = useState({
         name: '',
@@ -36,7 +36,6 @@ function NewElection() {
     const handleOnSubmitBtn = () => {
         initializeBallot(electionState);
     }
-
 
 
     return (
