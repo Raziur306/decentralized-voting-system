@@ -54,6 +54,19 @@ export const StyledList = styled(List)({
     fontsize: 10,
 });
 
+export const StyledSuccessBox = styled(Box)({
+    background: 'green',
+    width: 200,
+    height: 50,
+    padding: 20,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    borderRadius: 5,
+    margin: 'auto',
+    color: 'white',
+});
+
 
 //voters registration style
 export const StyledSelect = styled(Select)({

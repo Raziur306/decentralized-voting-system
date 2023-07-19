@@ -5,17 +5,20 @@ import { WalletContextProvider } from "../context/WalletConnectionContext";
 import { ThemeProvider } from "@mui/material";
 import theme from "../styles/theme";
 import { ResponsiveDrawer } from "../components";
+import { AuthorityContextProvider } from "../context/AuthorityContext";
 
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider activeChain={Sepolia}>
       <WalletContextProvider>
-        <ThemeProvider theme={theme}>
-          <ResponsiveDrawer>
-            <Component {...pageProps} />
-          </ResponsiveDrawer>
-        </ThemeProvider>
+        <AuthorityContextProvider>
+          <ThemeProvider theme={theme}>
+            <ResponsiveDrawer>
+              <Component {...pageProps} />
+            </ResponsiveDrawer>
+          </ThemeProvider>
+        </AuthorityContextProvider>
       </WalletContextProvider>
     </ThirdwebProvider>
   );
