@@ -1,4 +1,4 @@
-import { useContract, useContractWrite } from "@thirdweb-dev/react";
+import { useContract, useContractRead, useContractWrite } from "@thirdweb-dev/react";
 import React, { createContext, useContext, useState } from "react";
 
 export const AuthorityContext = createContext({});
@@ -11,6 +11,11 @@ interface ChildrenType {
 export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const { contract } = useContract(process.env.NEXT_PUBLIC_CONTRACT_KEY);
     const [isBallotInitialized, setIsBallotInitialized] = useState<Boolean>();
+    const [isVoterRegistered, setIsVoterRegistered] = useState<Boolean>();
+
+
+    //All elections
+    const { data: electionList, isLoading: isElectionListLoading } = useContractRead(contract, "getElections");
 
 
     //initialize ballot
@@ -26,12 +31,36 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     }
 
 
+    //register voters
+    const { mutateAsync: registerVoter, isLoading: isVoterRegistrationLoading } = useContractWrite(contract, "registerVoter");
+
+    const registerVoterCall = async (value: Object) => {
+        const { electionID, name, nid, email } = value;
+        try {
+            const data = await registerVoter({ args: [electionID, electionID, name, nid] });
+            sendEmailWithHash(data);
+        } catch (err) {
+            setIsVoterRegistered(false);
+        }
+    }
+
+    const sendEmailWithHash = (data: any) => {
+
+    }
+
+
 
 
     return <AuthorityContext.Provider value={{
+        electionList,
+        isElectionListLoading,
         isBallotInitialized,
         isBallotLoading,
         initializeBallot,
+        isVoterRegistered,
+        registerVoterCall,
+        isVoterRegistrationLoading
+
     }}>
         {children}
     </AuthorityContext.Provider>
