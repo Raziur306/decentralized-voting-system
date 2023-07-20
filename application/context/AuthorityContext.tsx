@@ -1,5 +1,5 @@
 import { EmailJSResponseStatus } from "@emailjs/browser";
-import { useContract, useContractRead, useContractWrite } from "@thirdweb-dev/react";
+import { useContract, useContractRead, useContractWrite, useStorageUpload } from "@thirdweb-dev/react";
 import React, { createContext, useContext, useState } from "react";
 import emailjs from '@emailjs/browser';
 
@@ -15,7 +15,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const [isBallotInitialized, setIsBallotInitialized] = useState<Boolean>();
     const [isVoterRegistered, setIsVoterRegistered] = useState<Boolean>();
     const [isVoterEmailSent, setIsVoterEmailSent] = useState<Boolean>();
-
+    const [isCandidateRegistered, setIsCandidateRegistered] = useState<Boolean>();
 
     //All elections
     const { data: electionList, isLoading: isElectionListLoading } = useContractRead(contract, "getElections");
@@ -24,8 +24,8 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     //initialize ballot
     const { mutateAsync: createElection, isLoading: isBallotLoading } = useContractWrite(contract, "createElection");
     const initializeBallot = async (value: Object) => {
-        const { name, startTime, endTime } = value
         try {
+            const { name, startTime, endTime } = value
             const data = await createElection({ args: [name, startTime, endTime] });
             setIsBallotInitialized(true);
         } catch (err) {
@@ -38,10 +38,9 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const { mutateAsync: registerVoter, isLoading: isVoterRegistrationLoading } = useContractWrite(contract, "registerVoter");
 
     const registerVoterCall = async (value: Object) => {
-        const { electionID, name, nid, email } = value;
         try {
+            const { electionID, name, nid, email } = value;
             const data = await registerVoter({ args: [electionID, electionID, name, nid] });
-
             const emailData = {
                 to_email: email,
                 from_name: 'Decentralized Voting System',
@@ -70,6 +69,26 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         })
     }
 
+    //register candidates
+    const { mutateAsync: registerCandidate, isLoading: isCandidateRegistrationLoading } = useContractWrite(contract, "registerCandidate")
+    const registerCandidateCall = async (value: Object, file: File) => {
+        try {
+            const { name, nid, email, electionID, symbolName } = value;
+            const symbolUrl = await uploadFile(file);
+            const data = await registerCandidate({ args: [electionID, name, nid, symbolName, symbolUrl] });
+            setIsCandidateRegistered(true);
+        } catch (err) {
+            setIsCandidateRegistered(false);
+        }
+    }
+
+    //upload file to IPFS
+    const { mutateAsync: upload } = useStorageUpload();
+    const uploadFile = async (file: File) => {
+        const uploadData = [file];
+        const uris = await upload({ data: uploadData });
+        return uris;
+    }
 
 
 
@@ -83,8 +102,10 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         registerVoterCall,
         isVoterRegistrationLoading,
         isVoterEmailSent,
-        setIsVoterEmailSent
-
+        setIsVoterEmailSent,
+        registerCandidateCall,
+        isCandidateRegistrationLoading,
+        isCandidateRegistered,
     }}>
         {children}
     </AuthorityContext.Provider>
