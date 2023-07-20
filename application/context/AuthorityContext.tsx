@@ -1,6 +1,5 @@
-import { EmailJSResponseStatus } from "@emailjs/browser";
 import { useContract, useContractRead, useContractWrite, useStorageUpload } from "@thirdweb-dev/react";
-import React, { createContext, useContext, useState } from "react";
+import React, { useEffect, createContext, useContext, useState } from "react";
 import emailjs from '@emailjs/browser';
 
 export const AuthorityContext = createContext({});
@@ -17,8 +16,47 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const [isVoterEmailSent, setIsVoterEmailSent] = useState<Boolean>();
     const [isCandidateRegistered, setIsCandidateRegistered] = useState<Boolean>();
 
+    //filtered election type
+    const [onGoingElection, setOngoingElection] = useState<any[]>([]);
+    const [previousElection, setPreviousElection] = useState<any[]>([]);
+    const [upComingElection, setUpComingElection] = useState<any[]>([]);
+
+
     //All elections
     const { data: electionList, isLoading: isElectionListLoading } = useContractRead(contract, "getElections");
+
+
+    useEffect(() => {
+        electionList?.map((election: any, index: number) => {
+            //make array empty
+            setPreviousElection([]);
+            setOngoingElection([]);
+            setUpComingElection([]);
+
+            //filter election list
+            const { startTime, endTime } = election;
+            const timeStamp = Date.now();
+            if (timeStamp > endTime) {
+                setPreviousElection([
+                    ...previousElection,
+                    election
+                ])
+            } else if (timeStamp < startTime) {
+                setUpComingElection([
+                    ...upComingElection,
+                    election
+                ])
+            } else {
+                setOngoingElection([
+                    ...onGoingElection,
+                    election
+                ])
+            }
+
+        })
+
+    }, [electionList])
+
 
 
     //initialize ballot
@@ -93,7 +131,9 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
 
 
     return <AuthorityContext.Provider value={{
-        electionList,
+        previousElection,
+        onGoingElection,
+        upComingElection,
         isElectionListLoading,
         isBallotInitialized,
         isBallotLoading,

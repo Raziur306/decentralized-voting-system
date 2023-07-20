@@ -8,7 +8,7 @@ import { AuthorityContext } from '../context/AuthorityContext';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 const RegisterVoters = () => {
-    const { setIsVoterEmailSent, isVoterEmailSent, electionList, isVoterRegistered, registerVoterCall, isVoterRegistrationLoading } = useContext(AuthorityContext)
+    const { setIsVoterEmailSent, isVoterEmailSent, upComingElection, isVoterRegistered, registerVoterCall, isVoterRegistrationLoading } = useContext(AuthorityContext)
     const [voterDetails, setVoterDetails] = useState({
         electionID: "",
         name: '',
@@ -61,8 +61,8 @@ const RegisterVoters = () => {
                         >
                             <StyledMenuItem value={""} disabled><em>Please Select</em></StyledMenuItem>
                             {
-                                electionList?.map((data, index) => {
-                                    const { name: electionName, hash } = data
+                                upComingElection?.map((election: any, index: any) => {
+                                    const { name: electionName, hash } = election
                                     return <StyledMenuItem name='electionID' value={hash} key={index}>{electionName}</StyledMenuItem>
                                 })
                             }

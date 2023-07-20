@@ -6,7 +6,7 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { StyledSelect, StyledChildBox, StyledSubmitBtn, StyledTypography } from '../styles/newElectionStyle';
 import { AuthorityContext } from '../context/AuthorityContext';
 function CandidateRegistration() {
-    const { isCandidateRegistrationLoading, isCandidateRegistered, registerCandidateCall } = useContext(AuthorityContext);
+    const { upComingElection, isCandidateRegistrationLoading, isCandidateRegistered, registerCandidateCall } = useContext(AuthorityContext);
     const [file, setFile] = useState(null);
     const [candidateDetails, setCandidateDetails] = useState({
         name: "",
@@ -58,9 +58,17 @@ function CandidateRegistration() {
                     <StyledChildBox>
                         <StyledTypography>Please select one election</StyledTypography>
                         <StyledSelect
+                            onChange={handleOnChange}
+                            value={candidateDetails.electionID}
                             displayEmpty
                         >
-                            <StyledMenuItem disabled><em>Please Select one Election</em></StyledMenuItem>
+                            <StyledMenuItem value={""} disabled><em>Please Select one Election</em></StyledMenuItem>
+                            {
+                                upComingElection.map((election: any, index: any) => {
+                                    const { name: electionName, hash } = election
+                                    return <StyledMenuItem name='electionID' value={hash} key={index}>{electionName}</StyledMenuItem>
+                                })
+                            }
                         </StyledSelect>
                     </StyledChildBox>
 
