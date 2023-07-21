@@ -13,8 +13,9 @@ export const StyledBox = styled(Box)({
     background: '#242B2E',
     padding: 20,
     borderRadius: 20,
+    cursor: 'pointer',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center'
 });
@@ -27,3 +28,9 @@ export const StyledViewBtn = styled(Button)({
     }
 
 });
+
+export const StyledElectionTypography = styled(Typography)({
+    WebkitLineClamp: 2,
+
+
+})

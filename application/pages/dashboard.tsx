@@ -8,14 +8,13 @@ const Dashboard = () => {
     const { previousElection, onGoingElection, upComingElection } = useContext(AuthorityContext);
 
 
-
     return (
         <>
             <Grid sx={{ color: 'white', pt: 10, gap: 20 }} container justifyContent={"center"} >
 
                 <Grid item xs={3} justifyContent={'center'}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                        <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} variant='h3' fontWeight={'bold'}>Previous Elections</Typography>
+                        <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} variant='h4' fontWeight={'bold'}>Previous Elections</Typography>
                         {
                             previousElection?.map((election: any, index: any) => {
                                 const { name, hash, startTime, endTime } = election;
@@ -28,7 +27,7 @@ const Dashboard = () => {
 
                 <Grid item xs={3} justifyContent={'center'}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                        <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} variant='h3' fontWeight={'bold'}>Ongoing Election</Typography>
+                        <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} variant='h4' fontWeight={'bold'}>Ongoing Election</Typography>
                         {
                             previousElection?.map((election: any, index: any) => {
                                 const { name, hash, startTime, endTime } = election;
@@ -40,7 +39,7 @@ const Dashboard = () => {
 
                 <Grid item xs={3} justifyContent={'center'}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                        <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} variant='h3' >Upcoming Elections</Typography>
+                        <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} variant='h4' >Upcoming Elections</Typography>
                         <UpcomingElectionCard />
                         <UpcomingElectionCard />
                         <UpcomingElectionCard />
