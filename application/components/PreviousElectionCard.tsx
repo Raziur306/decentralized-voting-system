@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Button, Typography } from "@mui/material"
-import { StyledBox, StyledCardTypography, StyledViewBtn } from '../styles/electionCardStyle'
+import { StyledCardTypography, StyledPreviousElectionBox } from '../styles/electionCardStyle'
 import { useRouter } from 'next/router'
 import { getTimeLeft } from '../utils/timeCalulation'
 
@@ -42,7 +42,7 @@ const PreviousElectionCard = ({ electionHash, electionName, startTime, endTime }
     useEffect(() => {
         const interval = setInterval(() => {
             const timeLeft = getTimeLeft(endTimeTimestamp);
-            const { days, hours, minutes, seconds } = getTimeLeft(endTimeTimestamp);
+            const { days, hours, minutes, seconds } = timeLeft;
             setEndTimeLeft({ days, hours, minutes, seconds });
         })
         return () => clearInterval(interval);
@@ -58,7 +58,7 @@ const PreviousElectionCard = ({ electionHash, electionName, startTime, endTime }
     console.log(startTime.toNumber());
 
     return (
-        <StyledBox onClick={handleOnClick}>
+        <StyledPreviousElectionBox onClick={handleOnClick}>
             <Typography sx={{ textAlign: 'center', marginBottom: 2 }} variant='h6'>{electionName}</Typography>
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -70,7 +70,7 @@ const PreviousElectionCard = ({ electionHash, electionName, startTime, endTime }
                     <Typography>{endTimeLeft.days}d : {endTimeLeft.hours}h : {endTimeLeft.minutes}m : {endTimeLeft.seconds}s </Typography>
                 </Box>
             </Box>
-        </StyledBox>
+        </StyledPreviousElectionBox>
     )
 }
 

@@ -20,6 +20,39 @@ export const StyledBox = styled(Box)({
     alignItems: 'center'
 });
 
+
+export const StyledPreviousElectionBox = styled(Box)({
+    background: 'rgb(255, 63, 63)',
+    padding: 20,
+    borderRadius: 20,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    transition: 'transform .2s',
+    ':hover': {
+        background: 'rgb(255, 91, 91)',
+        transform: 'scale(1.05)'
+    }
+});
+
+export const StyledOngoingElectionBox = styled(Box)({
+    background: 'rgb(59, 92, 253)',
+    padding: 20,
+    borderRadius: 20,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    transition: 'transform .2s',
+    ':hover': {
+        background: 'rgb(77, 106, 250 )',
+        transform: 'scale(1.05)'
+    }
+})
+
 export const StyledViewBtn = styled(Button)({
     color: 'white',
     borderRadius: 100,

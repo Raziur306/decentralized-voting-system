@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from '@mui/material'
 import React, { useContext } from 'react'
 import { AuthorityContext } from '../context/AuthorityContext';
-import { PreviousElectionCard, UpcomingElectionCard } from '../components';
+import { OngoingElectionCard, PreviousElectionCard, UpcomingElectionCard } from '../components';
 
 
 const Dashboard = () => {
@@ -31,7 +31,7 @@ const Dashboard = () => {
                         {
                             previousElection?.map((election: any, index: any) => {
                                 const { name, hash, startTime, endTime } = election;
-                                return <PreviousElectionCard electionHash={hash} electionName={name} startTime={startTime} endTime={endTime} key={index} />
+                                return <OngoingElectionCard electionHash={hash} electionName={name} startTime={startTime} endTime={endTime} key={index} />
                             })
                         }
                     </Box>
@@ -40,9 +40,12 @@ const Dashboard = () => {
                 <Grid item xs={3} justifyContent={'center'}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                         <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} variant='h4' >Upcoming Elections</Typography>
-                        <UpcomingElectionCard />
-                        <UpcomingElectionCard />
-                        <UpcomingElectionCard />
+                        {
+                            previousElection?.map((election: any, index: any) => {
+                                const { name, hash, startTime, endTime } = election;
+                                return <UpcomingElectionCard electionHash={hash} electionName={name} startTime={startTime} endTime={endTime} key={index} />
+                            })
+                        }
                     </Box>
                 </Grid>
 
