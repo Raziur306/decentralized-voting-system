@@ -9,16 +9,7 @@ export const StyledCardTypography = styled(Typography)({
     borderRadius: 50,
 });
 
-export const StyledBox = styled(Box)({
-    background: '#242B2E',
-    padding: 20,
-    borderRadius: 20,
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-});
+
 
 
 export const StyledPreviousElectionBox = styled(Box)({
@@ -49,6 +40,22 @@ export const StyledOngoingElectionBox = styled(Box)({
     transition: 'transform .2s',
     ':hover': {
         background: 'rgb(77, 106, 250 )',
+        transform: 'scale(1.05)'
+    }
+});
+
+export const StyledUpcomingElectionBox = styled(Box)({
+    background: 'rgb(37, 191, 84)',
+    padding: 20,
+    borderRadius: 20,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    transition: 'transform .2s',
+    ':hover': {
+        background: 'rgb(67, 196, 106 )',
         transform: 'scale(1.05)'
     }
 })
