@@ -15,7 +15,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const [isVoterRegistered, setIsVoterRegistered] = useState<Boolean>();
     const [isVoterEmailSent, setIsVoterEmailSent] = useState<Boolean>();
     const [isCandidateRegistered, setIsCandidateRegistered] = useState<Boolean>();
-
+    const [selectedElectionData, setSelectedElectionData] = useState({});
     //filtered election type
     const [onGoingElection, setOngoingElection] = useState<any[]>([]);
     const [previousElection, setPreviousElection] = useState<any[]>([]);
@@ -129,6 +129,11 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     }
 
 
+    //selected data
+    const setSelectedElection = (data: Object) => {
+        setSelectedElection(data);
+    }
+
 
     return <AuthorityContext.Provider value={{
         previousElection,
@@ -146,6 +151,8 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         registerCandidateCall,
         isCandidateRegistrationLoading,
         isCandidateRegistered,
+        setSelectedElection,
+        selectedElectionData
     }}>
         {children}
     </AuthorityContext.Provider>

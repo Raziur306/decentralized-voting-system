@@ -71,6 +71,4 @@ export const StyledViewBtn = styled(Button)({
 
 export const StyledElectionTypography = styled(Typography)({
     WebkitLineClamp: 2,
-
-
 })

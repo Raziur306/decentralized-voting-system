@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Box, Button, Typography } from "@mui/material"
 import { StyledCardTypography, StyledPreviousElectionBox } from '../styles/electionCardStyle'
 import { useRouter } from 'next/router'
 import { getTimeLeft } from '../utils/timeCalulation'
+import { AuthorityContext } from '../context/AuthorityContext'
 
 const PreviousElectionCard = ({ electionHash, electionName, startTime, endTime }) => {
+    const { setSelectedElection } = useContext(AuthorityContext)
     const router = useRouter();
     const startTimeTimestamp = startTime.toNumber();
     const endTimeTimestamp = endTime.toNumber();
@@ -51,6 +53,7 @@ const PreviousElectionCard = ({ electionHash, electionName, startTime, endTime }
 
 
     const handleOnClick = () => {
+        setSelectedElection({ electionHash, electionName, startTime, endTime });
         router.push('/votes')
     }
 

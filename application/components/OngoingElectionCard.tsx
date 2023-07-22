@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Box, Button, Typography } from "@mui/material"
 import { StyledBox, StyledCardTypography, StyledOngoingElectionBox, StyledViewBtn } from '../styles/electionCardStyle'
 import { useRouter } from 'next/router'
 import { getTimeLeft } from '../utils/timeCalulation'
+import { AuthorityContext } from '../context/AuthorityContext'
 
 const OngoingElectionCard = ({ electionHash, electionName, startTime, endTime }) => {
+    const { setSelectedElection } = useContext(AuthorityContext)
     const router = useRouter();
     const handleOnClick = () => {
+        setSelectedElection({ electionHash, electionName, startTime, endTime });
         router.push('/votes')
     }
 
