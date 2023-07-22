@@ -16,6 +16,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const [isVoterEmailSent, setIsVoterEmailSent] = useState<Boolean>();
     const [isCandidateRegistered, setIsCandidateRegistered] = useState<Boolean>();
     const [selectedElectionData, setSelectedElectionData] = useState({});
+    const [allElectionList, setAllElectionList] = useState<any[]>([]);
     //filtered election type
     const [onGoingElection, setOngoingElection] = useState<any[]>([]);
     const [previousElection, setPreviousElection] = useState<any[]>([]);
@@ -27,34 +28,30 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
 
 
     useEffect(() => {
-        electionList?.map((election: any, index: number) => {
-            //make array empty
-            setPreviousElection([]);
-            setOngoingElection([]);
-            setUpComingElection([]);
+        //make array empty
+        const prev: any[] = [];
+        const ongoing: any[] = [];
+        const upcoming: any[] = [];
 
+        setAllElectionList(electionList);
+        electionList?.forEach((election: any) => {
             //filter election list
             const { startTime, endTime } = election;
             const timeStamp = Date.now();
+
             if (timeStamp > endTime) {
-                setPreviousElection([
-                    ...previousElection,
-                    election
-                ])
+                setPreviousElection([]);
+                prev.push(election)
             } else if (timeStamp < startTime) {
-                setUpComingElection([
-                    ...upComingElection,
-                    election
-                ])
+                upcoming.push(election);
             } else {
-                setOngoingElection([
-                    ...onGoingElection,
-                    election
-                ])
+                ongoing.push(election);
             }
+        });
 
-        })
-
+        setPreviousElection(prev);
+        setOngoingElection(ongoing);
+        setUpComingElection(upcoming);
     }, [electionList])
 
 
@@ -131,7 +128,17 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
 
     //selected data
     const setSelectedElection = (data: Object) => {
-        setSelectedElection(data);
+        setSelectedElectionData(data);
+    }
+
+    //get election candidate
+    const getElectionCandidate = (electionID: any) => {
+        allElectionList?.map((election: any) => {
+            const { hash, candidates } = election;
+            if (hash == electionID) {
+                return candidates;
+            }
+        })
     }
 
 
@@ -152,7 +159,8 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         isCandidateRegistrationLoading,
         isCandidateRegistered,
         setSelectedElection,
-        selectedElectionData
+        selectedElectionData,
+        getElectionCandidate
     }}>
         {children}
     </AuthorityContext.Provider>
