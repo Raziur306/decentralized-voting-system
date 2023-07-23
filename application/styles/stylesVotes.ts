@@ -24,6 +24,7 @@ export const StyledTitleTypography = styled(Typography)({
 });
 
 export const StyledTextField = styled(TextField)({
+    color: 'white',
     '& .MuiInputBase-root': {
         color: 'white'
     },

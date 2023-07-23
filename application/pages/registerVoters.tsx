@@ -32,6 +32,7 @@ const RegisterVoters = () => {
     }
 
 
+
     return (
         <>
             <Grid sx={{ justifyContent: 'space-around', paddingTop: 8 }} container>
@@ -58,12 +59,14 @@ const RegisterVoters = () => {
                             onChange={handleOnChange}
                             value={voterDetails.electionID}
                             displayEmpty
+                            name='electionID'
                         >
                             <StyledMenuItem value={""} disabled><em>Please Select</em></StyledMenuItem>
                             {
-                                upComingElection?.map((election: any, index: any) => {
-                                    const { name: electionName, hash } = election
-                                    return <StyledMenuItem name='electionID' value={hash} key={index}>{electionName}</StyledMenuItem>
+                                upComingElection?.map((electionList: any, index: any) => {
+                                    const { election, electionId } = electionList
+                                    const { name: electionName } = election
+                                    return <StyledMenuItem value={electionId} key={index}>{electionName}</StyledMenuItem>
                                 })
                             }
                         </StyledSelect>

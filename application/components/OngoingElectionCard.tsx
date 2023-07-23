@@ -5,11 +5,11 @@ import { useRouter } from 'next/router'
 import { getTimeLeft } from '../utils/timeCalulation'
 import { AuthorityContext } from '../context/AuthorityContext'
 
-const OngoingElectionCard = ({ electionHash, electionName, startTime, endTime }) => {
+const OngoingElectionCard = ({ electionId, electionName, startTime, endTime }) => {
     const { setSelectedElection } = useContext(AuthorityContext)
     const router = useRouter();
     const handleOnClick = () => {
-        setSelectedElection({ electionHash, electionName, startTime, endTime });
+        setSelectedElection({ electionId, electionName, startTime: startTime.toNumber(), endTime: endTime.toNumber() });
         router.push('/votes')
     }
 

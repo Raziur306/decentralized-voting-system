@@ -5,11 +5,17 @@ import { useRouter } from 'next/router'
 import { getTimeLeft } from '../utils/timeCalulation'
 import { AuthorityContext } from '../context/AuthorityContext'
 
-const PreviousElectionCard = ({ electionHash, electionName, startTime, endTime }) => {
+const PreviousElectionCard = ({ electionId, electionName, startTime, endTime }) => {
     const { setSelectedElection } = useContext(AuthorityContext)
     const router = useRouter();
     const startTimeTimestamp = startTime.toNumber();
     const endTimeTimestamp = endTime.toNumber();
+
+    const handleOnClick = () => {
+        setSelectedElection({ electionId, electionName, startTime: startTime.toNumber(), endTime: endTime.toNumber() });
+        router.push('/votes')
+    }
+
 
     //starts in time state
     const [startTimeLeft, setStartTimeLeft] = useState({
@@ -52,13 +58,7 @@ const PreviousElectionCard = ({ electionHash, electionName, startTime, endTime }
 
 
 
-    const handleOnClick = () => {
-        setSelectedElection({ electionHash, electionName, startTime, endTime });
-        router.push('/votes')
-    }
 
-
-    console.log(startTime.toNumber());
 
     return (
         <StyledPreviousElectionBox onClick={handleOnClick}>

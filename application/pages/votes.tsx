@@ -1,12 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Box, Grid, TextField, Button, Typography, List, ListItem, ListItemText } from '@mui/material'
 import { VoteCounterCard } from '../components'
 import { StyledList, StyledTextField, StyledListItem, StyledTitleTypography, StyledVotingBox, StyledVerifyBtn } from '../styles/stylesVotes'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import { AuthorityContext } from '../context/AuthorityContext';
 const Votes = () => {
-
+    const { selectedElectionData, getElectionCandidate } = useContext(AuthorityContext);
     const [inputHash, setInputHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
+    const { electionHash, electionName, startTime, endTime } = selectedElectionData;
+    const [candidates, setCandidates] = useState([]);
+    const currentTimestamp = Date.now();
+
+
+    useEffect(() => {
+        const data = getElectionCandidate(electionHash);
+        setCandidates(data);
+    }, [])
+
+
+
 
     const handleOnVerifyBtnClick = () => {
         if (!inputHash) {
@@ -18,17 +31,15 @@ const Votes = () => {
         setInputHash(e.target.value.trim());
     }
 
-
-
     return (
         <Box sx={{ mt: 3 }}>
             <Grid container justifyContent={'center'} >
                 <Grid xs={5} item>
                     <StyledVotingBox>
-                        <StyledTitleTypography>Welcome to Voting system</StyledTitleTypography>
+                        <StyledTitleTypography>Cast your vote for {electionName}</StyledTitleTypography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                            <StyledTextField onChange={handleInputFieldChange} value={inputHash} error={errorStatus} placeholder='Enter your your hash..' />
-                            <StyledVerifyBtn onClick={handleOnVerifyBtnClick}>Verify</StyledVerifyBtn>
+                            <StyledTextField onChange={handleInputFieldChange} value={inputHash} error={errorStatus} placeholder='Enter your your hash..' disabled={(startTime > currentTimestamp) || (endTime < currentTimestamp)} />
+                            <StyledVerifyBtn disabled={(startTime > currentTimestamp) || (endTime < currentTimestamp)} onClick={handleOnVerifyBtnClick}>Verify</StyledVerifyBtn>
                         </Box>
                         <StyledList>
                             <ListItem>
@@ -53,8 +64,13 @@ const Votes = () => {
                     </StyledVotingBox>
                 </Grid>
 
-                <Grid xs={5} item>
-                    <Box>
+                <Grid xs={5} item sx={{ display: 'flex', margin: 'auto' }}>
+                    {
+                        candidates?.length == 0 && <Typography>No data Found</Typography>
+
+                    }
+
+                    {(endTime < currentTimestamp && candidates?.length > 0) && <>
                         <Grid container spacing={10} justifyContent={'center'}>
                             <Grid item>
                                 <VoteCounterCard />
@@ -68,7 +84,15 @@ const Votes = () => {
                         </Grid>
 
 
-                    </Box>
+                    </>}
+
+                    {(endTime > currentTimestamp) && <>
+                        <Typography variant='h4' sx={{ color: 'orange', fontWeight: 'bold', textAlign: 'center' }}>
+                            After the voting hours are over, the result will be announced.
+                        </Typography>
+
+                    </>
+                    }
                 </Grid>
 
             </Grid>

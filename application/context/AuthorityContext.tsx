@@ -1,4 +1,4 @@
-import { useContract, useContractRead, useContractWrite, useStorageUpload } from "@thirdweb-dev/react";
+import { useContract, useContractEvents, useContractRead, useContractWrite, useStorageUpload } from "@thirdweb-dev/react";
 import React, { useEffect, createContext, useContext, useState } from "react";
 import emailjs from '@emailjs/browser';
 
@@ -17,10 +17,19 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const [isCandidateRegistered, setIsCandidateRegistered] = useState<Boolean>();
     const [selectedElectionData, setSelectedElectionData] = useState({});
     const [allElectionList, setAllElectionList] = useState<any[]>([]);
+
     //filtered election type
     const [onGoingElection, setOngoingElection] = useState<any[]>([]);
     const [previousElection, setPreviousElection] = useState<any[]>([]);
     const [upComingElection, setUpComingElection] = useState<any[]>([]);
+
+    //voter hash finder state
+    const [details, setDetails] = useState({
+        electionID: null,
+        nid: null,
+        email: '',
+        name: ''
+    });
 
 
     //All elections
@@ -33,19 +42,20 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         const ongoing: any[] = [];
         const upcoming: any[] = [];
 
+
         setAllElectionList(electionList);
-        electionList?.forEach((election: any) => {
+        electionList?.forEach((election: any, index: number) => {
             //filter election list
             const { startTime, endTime } = election;
             const timeStamp = Date.now();
 
-            if (timeStamp > endTime) {
-                setPreviousElection([]);
-                prev.push(election)
-            } else if (timeStamp < startTime) {
-                upcoming.push(election);
+            if (timeStamp > endTime.toNumber()) {
+                prev.push({ electionId: index, election })
+
+            } else if (timeStamp < startTime.toNumber()) {
+                upcoming.push({ electionId: index, election })
             } else {
-                ongoing.push(election);
+                ongoing.push({ electionId: index, election })
             }
         });
 
@@ -61,7 +71,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const initializeBallot = async (value: Object) => {
         try {
             const { name, startTime, endTime } = value
-            const data = await createElection({ args: [name, startTime, endTime] });
+            const data = await createElection({ args: [name, startTime, endTime, Date.now()] });
             setIsBallotInitialized(true);
         } catch (err) {
             setIsBallotInitialized(false);
@@ -72,17 +82,15 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     //register voters
     const { mutateAsync: registerVoter, isLoading: isVoterRegistrationLoading } = useContractWrite(contract, "registerVoter");
 
+    const { data: voterHash, isLoading: isVoterHashFinderLoading } = useContractRead(contract, "getVoterHash", [details.electionID, details.nid]);
+
+
     const registerVoterCall = async (value: Object) => {
+
         try {
             const { electionID, name, nid, email } = value;
-            const data = await registerVoter({ args: [electionID, electionID, name, nid] });
-            const emailData = {
-                to_email: email,
-                from_name: 'Decentralized Voting System',
-                to_name: name,
-                message: data
-            };
-            sendEmailWithHash(emailData);
+            const data = await registerVoter({ args: [electionID, name, nid, Date.now()] });
+            setDetails({ electionID, nid, email, name });
         } catch (err) {
             setIsVoterRegistered(false);
         }
@@ -90,12 +98,25 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
 
     }
 
-    const sendEmailWithHash = (data: any) => {
+
+    useEffect(() => {
+        if (!isVoterHashFinderLoading && voterHash != undefined) {
+            sendEmailWithHash(voterHash)
+        }
+    }, [voterHash])
+
+    const sendEmailWithHash = (hash: any) => {
+        const emailData = {
+            to_email: details.email,
+            from_name: 'Decentralized Voting System',
+            to_name: details.name,
+            message: hash
+        };
 
         emailjs.send(
             process.env.NEXT_PUBLIC_EMAIL_JS_SERVICE_ID!,
             process.env.NEXT_PUBLIC_EMAIL_JS_TEMPLATE_ID!,
-            data,
+            emailData,
             process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY
         ).then((result) => {
             setIsVoterEmailSent(true);
@@ -110,7 +131,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         try {
             const { name, nid, email, electionID, symbolName } = value;
             const symbolUrl = await uploadFile(file);
-            const data = await registerCandidate({ args: [electionID, name, nid, symbolName, symbolUrl] });
+            const data = await registerCandidate({ args: [electionID, name, nid, symbolName, symbolUrl, Date.now()] });
             setIsCandidateRegistered(true);
         } catch (err) {
             setIsCandidateRegistered(false);
