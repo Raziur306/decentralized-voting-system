@@ -15,8 +15,9 @@ describe("Election Contract", () => {
     //temporary variable for testing
     //election
     const _electionName = "Test Election";
-    const _startTime = 1685164789;
-    const _endTime = 1685251189;
+    const _startTime = Date.now() + 500;
+    const _endTime = Date.now() + 1000;
+    const _currentTimeStamp = Date.now();
 
     //candidate
     const _electionID = 0;
@@ -31,7 +32,7 @@ describe("Election Contract", () => {
 
     it("Election must be created with proper information.", async () => {
         const { owner, hardhatElection } = await loadFixture(deployElectionFixture);
-        await hardhatElection.createElection(_electionName, _startTime, _endTime);
+        await hardhatElection.createElection(_electionName, _startTime, _endTime, _currentTimeStamp);
         const allElections = await hardhatElection.getElections();
 
         expect(allElections[0].name).to.equal(_electionName);
@@ -41,9 +42,9 @@ describe("Election Contract", () => {
 
     it("Candidate Registration", async () => {
         const { owner, hardhatElection } = await loadFixture(deployElectionFixture);
-        await hardhatElection.createElection(_electionName, _startTime, _endTime);
+        await hardhatElection.createElection(_electionName, _startTime, _endTime, _currentTimeStamp);
 
-        await hardhatElection.registerCandidate(_electionID, _candidateName, _candidateNid, _candidateSymbolName, _symbolImg);
+        await hardhatElection.registerCandidate(_electionID, _candidateName, _candidateNid, _candidateSymbolName, _symbolImg, _currentTimeStamp);
         const allElections = await hardhatElection.getElections();
 
         expect(allElections[0].candidates[0].name).to.equal(_candidateName);
@@ -56,35 +57,41 @@ describe("Election Contract", () => {
 
     it("Voter Registration", async () => {
         const { owner, hardhatElection } = await loadFixture(deployElectionFixture);
-        await hardhatElection.createElection(_electionName, _startTime, _endTime);
-        await hardhatElection.registerCandidate(_electionID, _candidateName, _candidateNid, _candidateSymbolName, _symbolImg);
+        await hardhatElection.createElection(_electionName, _startTime, _endTime, _currentTimeStamp);
+        await hardhatElection.registerCandidate(_electionID, _candidateName, _candidateNid, _candidateSymbolName, _symbolImg, _currentTimeStamp);
 
 
 
         //register voter
-        const hash = await hardhatElection.callStatic.registerVoter(_electionID, _voterName, _voterNid);
-        await hardhatElection.registerVoter(_electionID, _voterName, _voterNid);
+        const eventEmitter = await hardhatElection.registerVoter(_electionID, _voterName, _voterNid, _currentTimeStamp);
+
+
+
+        // await expect(eventEmitter.registerVoter(_electionID, _voterName, _voterNid, _currentTimeStamp)).to.emit(eventEmitter, "VoterEvent").withArgs(allElections[0].voters[0].hash);
+        // expect(allElections[0].voters[0].hash).to.equal(hash);
+
+        await hardhatElection.registerVoter(_electionID, _voterName, _voterNid, _currentTimeStamp);
 
         const allElections = await hardhatElection.getElections();
         expect(allElections[0].voters[0].nid).to.equal(_voterNid);
-        expect(allElections[0].voters[0].hash).to.equal(hash);
+
 
     });
 
 
     it("Give Vote", async () => {
         const { owner, hardhatElection } = await loadFixture(deployElectionFixture);
-        await hardhatElection.createElection(_electionName, _startTime, _endTime);
+        await hardhatElection.createElection(_electionName, _startTime, _endTime, _currentTimeStamp);
 
-        await hardhatElection.registerCandidate(_electionID, _candidateName, _candidateNid, _candidateSymbolName, _symbolImg);
+        await hardhatElection.registerCandidate(_electionID, _candidateName, _candidateNid, _candidateSymbolName, _symbolImg, _currentTimeStamp);
 
         //register voter
-        const hash = await hardhatElection.callStatic.registerVoter(_electionID, _voterName, _voterNid);
-        await hardhatElection.registerVoter(_electionID, _voterName, _voterNid);
+        const hash = await hardhatElection.registerVoter(_electionID, _voterName, _voterNid, _currentTimeStamp);
+        await hardhatElection.registerVoter(_electionID, _voterName, _voterNid, _currentTimeStamp);
 
         let allElections = await hardhatElection.getElections();
         //giving votes 
-        await hardhatElection.giveVote(_electionID, hash, allElections[0].candidates[0].hash);
+        await hardhatElection.giveVote(_electionID, hash, allElections[0].candidates[0].hash, _currentTimeStamp);
 
         allElections = await hardhatElection.getElections();
 

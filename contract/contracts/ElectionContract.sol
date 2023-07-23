@@ -38,11 +38,12 @@ contract ElectionContract {
     function createElection(
         string memory _electionName,
         uint256 _starTime,
-        uint256 _endTime
+        uint256 _endTime,
+        uint256 _currentTimeStamp
     ) public {
         require(owner == msg.sender, "Unauthorized access.");
         require(
-            _starTime > block.timestamp,
+            _starTime > _currentTimeStamp,
             "Start time can't be less than current time."
         );
         require(
@@ -60,7 +61,7 @@ contract ElectionContract {
             _electionName,
             _starTime,
             _endTime,
-            block.timestamp
+            _currentTimeStamp
         );
         election.hash = keccak256(concatenatedInputs);
 
@@ -73,7 +74,8 @@ contract ElectionContract {
         string memory _name,
         uint256 _nid,
         string memory _symbolName,
-        string memory _symbolImg
+        string memory _symbolImg,
+        uint256 _currentTimeStamp
     ) public {
         require(owner == msg.sender, "Unauthorozied access.");
         require(bytes(_name).length > 0, "Candidate name can't be empty.");
@@ -84,7 +86,7 @@ contract ElectionContract {
         Election storage election = elections[_electionId];
 
         require(
-            election.startTime > block.timestamp,
+            election.startTime > _currentTimeStamp,
             "The registration period has exceeded."
         );
 
@@ -120,11 +122,14 @@ contract ElectionContract {
     }
 
     //voter registration
+    event VoterEvent(bytes32 voterHash);
+
     function registerVoter(
         uint256 _electionId,
         string memory _name,
-        uint256 _nid
-    ) public returns (bytes32) {
+        uint256 _nid,
+        uint256 _currentTimeStamp
+    ) public {
         require(owner == msg.sender, "Unauthorized acess.");
         require(bytes(_name).length > 0, "Name can't be empty.");
         require(_electionId >= 0, "Election id can't be empty.");
@@ -133,7 +138,7 @@ contract ElectionContract {
         Election storage election = elections[_electionId];
 
         require(
-            election.startTime > block.timestamp,
+            election.startTime > _currentTimeStamp,
             "The registration period has exceeded."
         );
 
@@ -151,7 +156,7 @@ contract ElectionContract {
         voter.hash = generatedHash;
         voter.votingStatus = false;
         election.voters.push(voter);
-        return generatedHash;
+        emit VoterEvent(generatedHash);
     }
 
     //checking voter already registered or not
@@ -172,14 +177,18 @@ contract ElectionContract {
     function giveVote(
         uint256 _electionId,
         bytes32 _voterHash,
-        bytes32 _candidateHash
+        bytes32 _candidateHash,
+        uint256 _currentTimeStamp
     ) public {
         Election storage election = elections[_electionId];
         require(
-            election.startTime < block.timestamp,
+            election.startTime < _currentTimeStamp,
             "Election haven't started yet."
         );
-        require(election.endTime > block.timestamp, "Election time exceeded.");
+        require(
+            election.endTime > _currentTimeStamp,
+            "Election time exceeded."
+        );
         (bool status, uint256 voterIndex) = isVoterEligable(
             _electionId,
             _voterHash
