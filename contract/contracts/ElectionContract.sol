@@ -121,9 +121,7 @@ contract ElectionContract {
         return false;
     }
 
-    //voter registration
-    event VoterEvent(bytes32 voterHash);
-
+    //voter registraion
     function registerVoter(
         uint256 _electionId,
         string memory _name,
@@ -156,7 +154,22 @@ contract ElectionContract {
         voter.hash = generatedHash;
         voter.votingStatus = false;
         election.voters.push(voter);
-        emit VoterEvent(generatedHash);
+    }
+
+    function getVoterHash(
+        uint256 _electionId,
+        uint256 _voterNid
+    ) public view returns (bytes32) {
+        require(_electionId >= 0, "Election id must be provide");
+        require(_voterNid > 0, "Voter Id must be provide.");
+
+        Election storage election = elections[_electionId];
+        for (uint256 i = 0; i < election.voters.length; i++) {
+            if (election.voters[i].nid == _voterNid) {
+                return election.voters[i].hash;
+            }
+        }
+        revert("Not found");
     }
 
     //checking voter already registered or not
