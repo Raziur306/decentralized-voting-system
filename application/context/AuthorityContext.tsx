@@ -131,7 +131,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         try {
             const { name, nid, email, electionID, symbolName } = value;
             const symbolUrl = await uploadFile(file);
-            const data = await registerCandidate({ args: [electionID, name, nid, symbolName, symbolUrl, Date.now()] });
+            const data = await registerCandidate({ args: [electionID, name, nid, symbolName, symbolUrl[0], Date.now()] });
             setIsCandidateRegistered(true);
         } catch (err) {
             setIsCandidateRegistered(false);

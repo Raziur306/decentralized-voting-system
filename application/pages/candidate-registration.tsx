@@ -1,12 +1,14 @@
 import React, { useContext, useState } from 'react'
-import { Backdrop, MenuItem, Select, Grid, TextField, CircularProgress, Button, Typography, List, ListItem, ListItemText } from '@mui/material'
+import { Backdrop, MenuItem, Select, Grid, TextField, CircularProgress, Button, Typography, List, ListItem, ListItemText, Slide } from '@mui/material'
 import { VoteCounterCard } from '../components'
-import { StyledList, StyledTextField, StyledListItem, StyledMenuItem } from '../styles/newElectionStyle'
+import { StyledList, StyledTextField, StyledListItem, StyledMenuItem, StyledSuccessBox } from '../styles/newElectionStyle'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { StyledSelect, StyledChildBox, StyledSubmitBtn, StyledTypography } from '../styles/newElectionStyle';
 import { AuthorityContext } from '../context/AuthorityContext';
+import CancelIcon from '@mui/icons-material/Cancel';
+
 function CandidateRegistration() {
-    const { upComingElection, isCandidateRegistrationLoading, isCandidateRegistered, registerCandidateCall } = useContext(AuthorityContext);
+    const { upComingElection, isCandidateRegistered, registerCandidateCall, isCandidateRegistrationLoading } = useContext(AuthorityContext);
     const [file, setFile] = useState(null);
     const [candidateDetails, setCandidateDetails] = useState({
         name: "",
@@ -60,24 +62,26 @@ function CandidateRegistration() {
                         <StyledSelect
                             onChange={handleOnChange}
                             value={candidateDetails.electionID}
+                            name='electionID'
                             displayEmpty
                         >
                             <StyledMenuItem value={""} disabled><em>Please Select one Election</em></StyledMenuItem>
                             {
-                                upComingElection.map((election: any, index: any) => {
-                                    const { name: electionName, hash } = election
-                                    return <StyledMenuItem name='electionID' value={hash} key={index}>{electionName}</StyledMenuItem>
+                                upComingElection.map((elections: any, index: any) => {
+                                    const { election, electionId } = elections
+                                    const { name } = election
+                                    return <StyledMenuItem value={electionId} key={index}>{name}</StyledMenuItem>
                                 })
                             }
                         </StyledSelect>
                     </StyledChildBox>
 
                     <StyledChildBox>
-                        <StyledTypography>Voter&apos;s Name</StyledTypography>
-                        <StyledTextField onChange={handleOnChange} name='name' placeholder='Enter Election name' type='text' />
+                        <StyledTypography>Candidate&apos;s Name</StyledTypography>
+                        <StyledTextField onChange={handleOnChange} name='name' placeholder='Enter candidate name' type='text' />
                     </StyledChildBox>
                     <StyledChildBox>
-                        <StyledTypography>Enter Voter NID</StyledTypography>
+                        <StyledTypography>Enter Candidate NID</StyledTypography>
                         <StyledTextField onChange={handleOnChange} name='nid' type='number' placeholder='NID number' />
                     </StyledChildBox>
                     <StyledChildBox>
@@ -91,6 +95,16 @@ function CandidateRegistration() {
                     <StyledSubmitBtn onClick={handleOnSubmit} sx={{ bgcolor: 'green!important' }}>Register Voter</StyledSubmitBtn>
                 </Grid>
             </Grid>
+
+            <Slide direction="up" in={isCandidateRegistered} mountOnEnter unmountOnExit>
+                <StyledSuccessBox>
+                    <Typography color={'white'}>Successful</Typography>
+                    <CancelIcon sx={{ cursor: 'pointer' }} />
+                </StyledSuccessBox>
+            </Slide>
+
+
+
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isCandidateRegistrationLoading}>
                 <CircularProgress sx={{ color: "gray" }} />
