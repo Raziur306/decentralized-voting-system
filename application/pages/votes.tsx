@@ -1,28 +1,28 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Box, Grid, TextField, Button, Typography, List, ListItem, ListItemText } from '@mui/material'
-import { VoteCounterCard } from '../components'
+import { ButtonBase, Box, Grid, Button, Typography, List, ListItem, ListItemText, Dialog } from '@mui/material'
+import { CandidateCardComponent, VoteCounterCard } from '../components'
 import { StyledList, StyledTextField, StyledListItem, StyledTitleTypography, StyledVotingBox, StyledVerifyBtn } from '../styles/stylesVotes'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { AuthorityContext } from '../context/AuthorityContext';
+import CloseIcon from '@mui/icons-material/Close';
+import { StyledRadio } from '../styles/candidateStyle';
+
 const Votes = () => {
-    const { selectedElectionData, getElectionCandidate } = useContext(AuthorityContext);
+    const { selectedElectionData, getElectionCandidate, selectedElectionCandidate } = useContext(AuthorityContext);
     const [inputHash, setInputHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
-    const { electionHash, electionName, startTime, endTime } = selectedElectionData;
-    const [candidates, setCandidates] = useState([]);
+    const { electionID, electionName, startTime, endTime } = selectedElectionData;
     const currentTimestamp = Date.now();
-
-
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedCandidateHash, setSelectedCandidateHash] = useState('');
     useEffect(() => {
-        const data = getElectionCandidate(electionHash);
-        setCandidates(data);
+        getElectionCandidate(3);
     }, [])
-
-
 
 
     const handleOnVerifyBtnClick = () => {
         if (!inputHash) {
+            setIsOpen(!isOpen);
             return setErrorStatus(true);
         }
         setErrorStatus(false);
@@ -30,6 +30,18 @@ const Votes = () => {
     const handleInputFieldChange = (e) => {
         setInputHash(e.target.value.trim());
     }
+
+    const handleOnCloseBtn = () => {
+        setIsOpen(!isOpen);
+    }
+
+
+    const handleOnSubmitBtn = () => {
+
+    }
+
+
+
 
     return (
         <Box sx={{ mt: 3 }}>
@@ -66,11 +78,11 @@ const Votes = () => {
 
                 <Grid xs={5} item sx={{ display: 'flex', margin: 'auto' }}>
                     {
-                        candidates?.length == 0 && <Typography>No data Found</Typography>
+                        selectedElectionCandidate?.length == 0 && <Typography>No data Found</Typography>
 
                     }
 
-                    {(endTime < currentTimestamp && candidates?.length > 0) && <>
+                    {(endTime < currentTimestamp && selectedElectionCandidate?.length > 0) && <>
                         <Grid container spacing={10} justifyContent={'center'}>
                             <Grid item>
                                 <VoteCounterCard />
@@ -96,6 +108,40 @@ const Votes = () => {
                 </Grid>
 
             </Grid>
+
+
+
+            <Dialog open={isOpen}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', padding: 5, borderRadius: 5 }}>
+                    <Box sx={{ marginBottom: 3, display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant='h6' sx={{ fontWeight: 'bold', color: 'white' }}>Please Select Candidate to Vote</Typography>
+                        <CloseIcon onClick={handleOnCloseBtn} sx={{ cursor: 'pointer', color: 'white' }} />
+                    </Box>
+
+                    {
+                        selectedElectionCandidate?.map((candidate: any, index: number) => {
+                            const { name: candidateName, hash, symbolName, symbolImg } = candidate;
+
+                            return <Box key={index} sx={{ marginTop: 2, overflow: 'hidden', cursor: 'pointer', borderRadius: 2, boxShadow: '1px 0px 11px black' }}>
+                                <ButtonBase onClick={() => { setSelectedCandidateHash(hash) }} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', padding: 2 }} component="div">
+                                    <StyledRadio checked={hash == selectedCandidateHash} />
+                                    <CandidateCardComponent candidateName={candidateName} symbolName={symbolName} symbolImg={symbolImg} />
+                                </ButtonBase>
+                            </Box>
+                        })
+                    }
+
+
+                    <Button sx={{
+                        marginTop: 10, color: 'white', bgcolor: 'red', padding: 1, '&:hover': {
+                            bgcolor: 'rgb(223, 32, 32)'
+                        }
+                    }} onClick={handleOnSubmitBtn}>Submit</Button>
+                </Box>
+
+            </Dialog >
+
+
         </Box >
     )
 }

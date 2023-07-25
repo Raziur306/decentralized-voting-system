@@ -17,7 +17,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const [isCandidateRegistered, setIsCandidateRegistered] = useState<Boolean>();
     const [selectedElectionData, setSelectedElectionData] = useState({});
     const [allElectionList, setAllElectionList] = useState<any[]>([]);
-
+    const [selectedElectionCandidate, setSelectedElectionCandidate] = useState<any[]>([]);
     //filtered election type
     const [onGoingElection, setOngoingElection] = useState<any[]>([]);
     const [previousElection, setPreviousElection] = useState<any[]>([]);
@@ -154,10 +154,10 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
 
     //get election candidate
     const getElectionCandidate = (electionID: any) => {
-        allElectionList?.map((election: any) => {
+        allElectionList?.map((election: any, index: number) => {
             const { hash, candidates } = election;
-            if (hash == electionID) {
-                return candidates;
+            if (index == electionID) {
+                return setSelectedElectionCandidate(candidates);
             }
         })
     }
@@ -181,7 +181,8 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         isCandidateRegistered,
         setSelectedElection,
         selectedElectionData,
-        getElectionCandidate
+        getElectionCandidate,
+        selectedElectionCandidate
     }}>
         {children}
     </AuthorityContext.Provider>
