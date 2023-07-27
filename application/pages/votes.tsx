@@ -15,6 +15,8 @@ const Votes = () => {
     const currentTimestamp = Date.now();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCandidateHash, setSelectedCandidateHash] = useState('');
+
+
     useEffect(() => {
         getElectionCandidate(3);
     }, [])
@@ -84,15 +86,14 @@ const Votes = () => {
 
                     {(endTime < currentTimestamp && selectedElectionCandidate?.length > 0) && <>
                         <Grid container spacing={10} justifyContent={'center'}>
-                            <Grid item>
-                                <VoteCounterCard />
-                            </Grid>
-                            <Grid item>
-                                <VoteCounterCard />
-                            </Grid>
-                            <Grid item>
-                                <VoteCounterCard />
-                            </Grid>
+                            {
+                                selectedElectionCandidate?.map((candidate: any, index: number) => {
+                                    const { votes, name: candidateName, symbolImg } = candidate;
+                                    return <Grid key={index} item>
+                                        <VoteCounterCard key={index} candidateName={candidateName} symbolImage={symbolImg} votes={votes} />
+                                    </Grid>
+                                })
+                            }
                         </Grid>
 
 
