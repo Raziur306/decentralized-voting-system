@@ -11,15 +11,15 @@ const Votes = () => {
     const { selectedElectionData, getElectionCandidate, selectedElectionCandidate } = useContext(AuthorityContext);
     const [inputHash, setInputHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
-    const { electionID, electionName, startTime, endTime } = selectedElectionData;
+    const { electionId, electionName, startTime, endTime } = selectedElectionData;
     const currentTimestamp = Date.now();
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCandidateHash, setSelectedCandidateHash] = useState('');
 
 
     useEffect(() => {
-        getElectionCandidate(3);
-    }, [])
+        getElectionCandidate(electionId);
+    }, [electionId])
 
 
     const handleOnVerifyBtnClick = () => {

@@ -149,6 +149,7 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
 
     //selected data
     const setSelectedElection = (data: Object) => {
+        console.log(data);
         setSelectedElectionData(data);
     }
 
