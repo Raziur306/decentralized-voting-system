@@ -11,4 +11,9 @@ This voting system is mainly developed with Ethereum Blockchain. This system is 
 ![Register Voter](/screenshots/register%20voter.png)
 ![Voter got hash in email](/screenshots/email.png)
 ### Vote Casting and Result
-![Dashboard Screen](/screenshots/Vote%20casting.png)
+#### Candidate Selection
+![Dashboard Screen](/screenshots/candidate%20selection.png)
+#### Cast Vote
+![Dashboard Screen](/screenshots/casting%20vote.png)
+#### Election Result
+![Dashboard Screen](/screenshots/final%20result.png)
