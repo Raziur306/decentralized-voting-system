@@ -23,14 +23,18 @@ const Votes = () => {
         getElectionCandidate(electionId);
     }, [electionId])
 
-
+    useEffect(() => {
+        if (voteCountStatus) {
+            setIsOpen(false);
+        }
+    }, [voteCountStatus])
 
 
     const handleOnVerifyBtnClick = () => {
         if (!inputHash) {
-            setIsOpen(!isOpen);
             return setErrorStatus(true);
         }
+        setIsOpen(true);
         setErrorStatus(false);
     }
     const handleInputFieldChange = (e) => {
@@ -43,14 +47,12 @@ const Votes = () => {
 
 
     const handleOnSubmitBtn = () => {
-        setIsLoading(true);
         giveVoteCall(electionId, inputHash, selectedCandidateHash)
     }
 
     const handleNotificationCancel = () => {
         setVoteCountStatus(false);
     }
-
 
 
 
@@ -154,7 +156,7 @@ const Votes = () => {
 
         </Box >
         <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isGivingVoteProcessLoading}>
+            sx={{ color: '#fff', zIndex: (theme) => Math.max.apply(Math, Object.values(theme.zIndex)) + 1 }} open={isGivingVoteProcessLoading}>
             <CircularProgress sx={{ color: "gray" }} />
         </Backdrop>
         <Slide direction="up" in={voteCountStatus} mountOnEnter unmountOnExit>
