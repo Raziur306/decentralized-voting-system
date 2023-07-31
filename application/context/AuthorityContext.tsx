@@ -18,6 +18,8 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     const [selectedElectionData, setSelectedElectionData] = useState({});
     const [allElectionList, setAllElectionList] = useState<any[]>([]);
     const [selectedElectionCandidate, setSelectedElectionCandidate] = useState<any[]>([]);
+    const [voteCountStatus, setVoteCountStatus] = useState<Boolean>(false);
+    const [isGivingVoteProcessLoading, setIsGivingVoteProcessLoading] = useState<Boolean>();
     //filtered election type
     const [onGoingElection, setOngoingElection] = useState<any[]>([]);
     const [previousElection, setPreviousElection] = useState<any[]>([]);
@@ -164,6 +166,23 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
     }
 
 
+
+    //give vote
+    const { mutateAsync: giveVote, isLoading } = useContractWrite(contract, "giveVote");
+    const giveVoteCall = async (_electionId: number, _voterHash: any, _candidateHash: any) => {
+        setIsGivingVoteProcessLoading(true);
+        try {
+            const data = await giveVote({ args: [_electionId, _voterHash, _candidateHash, Date.now()] });
+            setVoteCountStatus(true);
+            setIsGivingVoteProcessLoading(false);
+        } catch (err) {
+            setVoteCountStatus(false);
+            setIsGivingVoteProcessLoading(false);
+        }
+    }
+
+
+
     return <AuthorityContext.Provider value={{
         previousElection,
         onGoingElection,
@@ -183,7 +202,11 @@ export const AuthorityContextProvider = ({ children }: ChildrenType) => {
         setSelectedElection,
         selectedElectionData,
         getElectionCandidate,
-        selectedElectionCandidate
+        selectedElectionCandidate,
+        giveVoteCall,
+        voteCountStatus,
+        setVoteCountStatus,
+        isGivingVoteProcessLoading,
     }}>
         {children}
     </AuthorityContext.Provider>

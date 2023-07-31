@@ -1,14 +1,16 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { ButtonBase, Box, Grid, Button, Typography, List, ListItem, ListItemText, Dialog } from '@mui/material'
+import { Backdrop, CircularProgress, ButtonBase, Box, Grid, Button, Typography, List, ListItem, ListItemText, Dialog, Slide } from '@mui/material'
 import { CandidateCardComponent, VoteCounterCard } from '../components'
 import { StyledList, StyledTextField, StyledListItem, StyledTitleTypography, StyledVotingBox, StyledVerifyBtn } from '../styles/stylesVotes'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { AuthorityContext } from '../context/AuthorityContext';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledRadio } from '../styles/candidateStyle';
+import { StyledSuccessBox } from '../styles/newElectionStyle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const Votes = () => {
-    const { selectedElectionData, getElectionCandidate, selectedElectionCandidate } = useContext(AuthorityContext);
+    const { selectedElectionData, getElectionCandidate, selectedElectionCandidate, giveVoteCall, voteCountStatus, setVoteCountStatus, isGivingVoteProcessLoading } = useContext(AuthorityContext);
     const [inputHash, setInputHash] = useState('');
     const [errorStatus, setErrorStatus] = useState(false);
     const { electionId, electionName, startTime, endTime } = selectedElectionData;
@@ -20,6 +22,8 @@ const Votes = () => {
     useEffect(() => {
         getElectionCandidate(electionId);
     }, [electionId])
+
+
 
 
     const handleOnVerifyBtnClick = () => {
@@ -39,13 +43,18 @@ const Votes = () => {
 
 
     const handleOnSubmitBtn = () => {
+        setIsLoading(true);
+        giveVoteCall(electionId, inputHash, selectedCandidateHash)
+    }
 
+    const handleNotificationCancel = () => {
+        setVoteCountStatus(false);
     }
 
 
 
 
-    return (
+    return (<>
         <Box sx={{ mt: 3 }}>
             <Grid container justifyContent={'center'} >
                 <Grid xs={5} item>
@@ -144,6 +153,17 @@ const Votes = () => {
 
 
         </Box >
+        <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isGivingVoteProcessLoading}>
+            <CircularProgress sx={{ color: "gray" }} />
+        </Backdrop>
+        <Slide direction="up" in={voteCountStatus} mountOnEnter unmountOnExit>
+            <StyledSuccessBox>
+                <Typography color={'white'}>Successful</Typography>
+                <CancelIcon onClick={handleNotificationCancel} sx={{ cursor: 'pointer' }} />
+            </StyledSuccessBox>
+        </Slide>
+    </>
     )
 }
 
